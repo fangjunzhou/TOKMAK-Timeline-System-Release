@@ -1,8 +1,8 @@
 {
-  "name": "com.fintokmak.uistacksystem",
-  "version": "0.1.1",
-  "displayName": "UI Stack System",
-  "description": "This is stack based UI management system developed by FinTOKMAK Studio.",
+  "name": "com.fintokmak.PACKAGE",
+  "version": "0.0.1",
+  "displayName": "PACKAGE",
+  "description": "PACKAGE DISCRIPTION",
   "unity": "2020.3",
   "unityRelease": "0b5",
   "license": "GPL",
