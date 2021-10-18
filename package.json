@@ -1,8 +1,8 @@
 {
-  "name": "com.fintokmak.PACKAGE",
+  "name": "com.fintokmak.timelinesystem",
   "version": "0.0.1",
-  "displayName": "PACKAGE",
-  "description": "PACKAGE DISCRIPTION",
+  "displayName": "TOKMAK Timeline System",
+  "description": "A timeline system developed by FinTOKMAK Studio",
   "unity": "2020.3",
   "unityRelease": "0b5",
   "license": "GPL",
