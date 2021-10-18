@@ -10,6 +10,12 @@ namespace FinTOKMAK.TimelineSystem.Runtime
         
     }
 
+    [System.Serializable]
+    public class AnimEventDict : SerializableDictionary<string, AnimEventInvoker>
+    {
+        
+    }
+
     public class TimelineSystem : MonoBehaviour
     {
         #region Public Field
@@ -19,6 +25,12 @@ namespace FinTOKMAK.TimelineSystem.Runtime
         /// all the Animators used by this Timeline System
         /// </summary>
         public AnimatorDict animatorDict;
+
+        /// <summary>
+        /// The string-AnimEventInvoker dictionary that keep track of
+        /// all the AnimEventInvoker used by this Timeline System
+        /// </summary>
+        public AnimEventDict animEventDict;
 
         #endregion
         
