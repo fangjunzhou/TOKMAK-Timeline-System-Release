@@ -4,8 +4,24 @@ using UnityEngine;
 
 namespace FinTOKMAK.TimelineSystem.Runtime
 {
+    [System.Serializable]
+    public class AnimatorDict : SerializableDictionary<string, Animator>
+    {
+        
+    }
+
     public class TimelineSystem : MonoBehaviour
     {
+        #region Public Field
+
+        /// <summary>
+        /// The string-Animator dictionary that keep track of
+        /// all the Animators used by this Timeline System
+        /// </summary>
+        public AnimatorDict animatorDict;
+
+        #endregion
+        
         #region Private Field
 
         /// <summary>
