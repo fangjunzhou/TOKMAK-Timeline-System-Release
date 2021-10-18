@@ -10,12 +10,6 @@ namespace FinTOKMAK.TimelineSystem.Runtime
         
     }
 
-    [System.Serializable]
-    public class AnimEventDict : SerializableDictionary<string, AnimEventInvoker>
-    {
-        
-    }
-
     public class TimelineSystem : MonoBehaviour
     {
         #region Public Field
@@ -24,13 +18,7 @@ namespace FinTOKMAK.TimelineSystem.Runtime
         /// The string-Animator dictionary that keep track of
         /// all the Animators used by this Timeline System
         /// </summary>
-        public AnimatorDict animatorDict;
-
-        /// <summary>
-        /// The string-AnimEventInvoker dictionary that keep track of
-        /// all the AnimEventInvoker used by this Timeline System
-        /// </summary>
-        public AnimEventDict animEventDict;
+        public AnimatorDict animatorDict = new AnimatorDict();
 
         #endregion
         
@@ -39,20 +27,46 @@ namespace FinTOKMAK.TimelineSystem.Runtime
         /// <summary>
         /// A dict for the event system to call the event by event name.
         /// </summary>
-        private Dictionary<string, Action> _eventTable;
+        private Dictionary<string, Action> _eventTable = new Dictionary<string, Action>();
+
+        /// <summary>
+        /// The string-AnimEventInvoker dictionary that keep track of
+        /// all the AnimEventInvoker used by this Timeline System
+        /// </summary>
+        private Dictionary<string, AnimEventInvoker> _animEventTable = new Dictionary<string, AnimEventInvoker>();
 
         #endregion
-        
-        // Start is called before the first frame update
-        void Start()
+
+        private void Awake()
         {
-        
+            // Initialize the animEventTable
+            foreach (string animatorDictKey in animatorDict.Keys)
+            {
+                // Check if the animator has the corresponding AnimEventInvoker
+                AnimEventInvoker currEventInvoker =
+                    animatorDict[animatorDictKey].gameObject.GetComponent<AnimEventInvoker>();
+                
+                // If no AnimEventInvoker was found, create a new one
+                if (currEventInvoker == null)
+                {
+                    currEventInvoker = animatorDict[animatorDictKey].gameObject.AddComponent<AnimEventInvoker>();
+                }
+                
+                // Register the event handler of all the event handlers
+                currEventInvoker.eventHandler += InvokeEvent;
+                
+                // Add the event Invoker into the animEventTable
+                _animEventTable.Add(animatorDictKey, currEventInvoker);
+            }
         }
 
-        // Update is called once per frame
-        void Update()
+        private void OnDestroy()
         {
-        
+            // Unregister all the event handlers
+            foreach (string key in _animEventTable.Keys)
+            {
+                _animEventTable[key].eventHandler -= InvokeEvent;
+            }
         }
 
         #region Public Methods
@@ -99,6 +113,26 @@ namespace FinTOKMAK.TimelineSystem.Runtime
         {
             _eventTable[name]?.Invoke();
         }
+
+        /// <summary>
+        /// The method for SkillSystem and WeaponSystem to play a timeline.
+        /// </summary>
+        /// <param name="timeline">The timeline to play</param>
+        public void PlayTimeline(Timeline timeline)
+        {
+            // All the event to be checked.
+            HashSet<string> checkEventNames;
+            // All the animations to be checked.
+            HashSet<string> checkAnim;
+            
+            // TODO: Finish implement PlayTimeline
+        }
+
+        #endregion
+
+        #region Private Methods
+
+        
 
         #endregion
     }
