@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -120,11 +121,6 @@ namespace FinTOKMAK.TimelineSystem.Runtime
         /// <param name="timeline">The timeline to play</param>
         public void PlayTimeline(Timeline timeline)
         {
-            // All the event to be checked.
-            HashSet<string> checkEventNames;
-            // All the animations to be checked.
-            HashSet<string> checkAnim;
-            
             // TODO: Finish implement PlayTimeline
         }
 
@@ -132,7 +128,94 @@ namespace FinTOKMAK.TimelineSystem.Runtime
 
         #region Private Methods
 
-        
+        /// <summary>
+        /// A coroutine to play the timeline.
+        /// </summary>
+        /// <param name="timeline">The timeline to be played.</param>
+        /// <returns>enumerator</returns>
+        private IEnumerator TimelineCoroutine(Timeline timeline)
+        {
+            // All the event to be checked.
+            HashSet<string> checkEventNames = new HashSet<string>();
+            // All the animations to be checked.
+            HashSet<string> checkAnimNames = new HashSet<string>();
+
+            // TODO: Initialize the checkEventNames and checkAnimNames
+
+            foreach (CheckNode checkNode in timeline.checkNodes)
+            {
+                if (checkNode.nodeType == CheckNodeType.CheckAnim)
+                {
+                    checkAnimNames.Add(checkNode.field);
+                }
+                else if (checkNode.nodeType == CheckNodeType.CheckEvent)
+                {
+                    checkEventNames.Add(checkNode.field);
+                }
+            }
+
+            // The timmer
+            float startTime = Time.realtimeSinceStartup;
+
+            // Play the nodes
+            foreach (PlayableNode playableNode in timeline.playableNodes)
+            {
+                // Calculate the wait time
+                float waitTime = playableNode.time - (Time.realtimeSinceStartup - startTime);
+                // If the node should have been played, play immediatly.
+                if (waitTime <= 0)
+                {
+                    if (playableNode.nodeType == PlayableNodeType.EndMark)
+                    {
+                        // TODO: End check here
+
+                        break;
+                    }
+                    PlayNode(playableNode, checkEventNames, checkAnimNames);
+                    // Continue to the next node.
+                    continue;
+                }
+                // wait until the time to play the node
+                yield return new WaitForSeconds(waitTime);
+                
+                if (playableNode.nodeType == PlayableNodeType.EndMark)
+                {
+                    // TODO: End check here
+
+                    break;
+                }
+                PlayNode(playableNode, checkEventNames, checkAnimNames);
+            }
+        }
+
+        /// <summary>
+        /// The method to play a PlayableNode.
+        /// </summary>
+        /// <param name="node">The PlayableNode to be played.</param>
+        /// <param name="checkEvent">The event to be checked.</param>
+        /// <param name="checkAnim">The animation to be checked.</param>
+        private void PlayNode(PlayableNode node, HashSet<string> checkEvent, HashSet<string> checkAnim)
+        {
+            if (node.nodeType == PlayableNodeType.EndMark)
+            {
+                return;
+            }
+
+            // Invoke the event
+            if (node.nodeType == PlayableNodeType.InvokeEvent)
+            {
+                // Remove the name of the event from the event hash set
+                checkEvent.Remove(node.field);
+                // TODO: Invoke the event here.
+            }
+            // Play the animation
+            else if (node.nodeType == PlayableNodeType.PlayAnim)
+            {
+                // Remove the name of animation from the anim hash set
+                checkAnim.Remove(node.field);
+                // TODO: Play the animation here.
+            }
+        }
 
         #endregion
     }
