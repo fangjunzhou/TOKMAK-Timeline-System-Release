@@ -1,0 +1,16 @@
+{
+    "name": "FinTOKMAK.TimelineSystem.Runtime",
+    "rootNamespace": "",
+    "references": [
+        "GUID:8d06a79d7fbc6dc4b9a85c4b21d710a9"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
