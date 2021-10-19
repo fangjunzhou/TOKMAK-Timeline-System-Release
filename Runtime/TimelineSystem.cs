@@ -36,6 +36,11 @@ namespace FinTOKMAK.TimelineSystem.Runtime
         /// </summary>
         private Dictionary<string, AnimEventInvoker> _animEventTable = new Dictionary<string, AnimEventInvoker>();
 
+        /// <summary>
+        /// The listener of local event invoke system.
+        /// </summary>
+        private Action<string> _eventSystemInvokeHook;
+
         #endregion
 
         private void Awake()
@@ -109,10 +114,11 @@ namespace FinTOKMAK.TimelineSystem.Runtime
         /// <summary>
         /// The method to invoke a event.
         /// </summary>
-        /// <param name="name">The name of the event.</param>
-        public void InvokeEvent(string name)
+        /// <param name="eventName">The name of the event.</param>
+        public void InvokeEvent(string eventName)
         {
-            _eventTable[name]?.Invoke();
+            _eventTable[eventName]?.Invoke();
+            _eventSystemInvokeHook?.Invoke(eventName);
         }
 
         /// <summary>
@@ -121,7 +127,8 @@ namespace FinTOKMAK.TimelineSystem.Runtime
         /// <param name="timeline">The timeline to play</param>
         public void PlayTimeline(Timeline timeline)
         {
-            // TODO: Finish implement PlayTimeline
+            // Finish implement PlayTimeline
+            StartCoroutine(TimelineCoroutine(timeline));
         }
 
         #endregion
@@ -140,7 +147,7 @@ namespace FinTOKMAK.TimelineSystem.Runtime
             // All the animations to be checked.
             HashSet<string> checkAnimNames = new HashSet<string>();
 
-            // TODO: Initialize the checkEventNames and checkAnimNames
+            // Initialize the checkEventNames and checkAnimNames
 
             foreach (CheckNode checkNode in timeline.checkNodes)
             {
@@ -154,7 +161,16 @@ namespace FinTOKMAK.TimelineSystem.Runtime
                 }
             }
 
-            // The timmer
+            // The internal function to remove the event from the event set
+            void RemoveEventSet(string s)
+            {
+                checkEventNames.Remove(s);
+            }
+            
+            // Start listening to all the event invoke when timeline is played
+            _eventSystemInvokeHook += RemoveEventSet;
+
+            // The timer
             float startTime = Time.realtimeSinceStartup;
 
             // Play the nodes
@@ -167,7 +183,8 @@ namespace FinTOKMAK.TimelineSystem.Runtime
                 {
                     if (playableNode.nodeType == PlayableNodeType.EndMark)
                     {
-                        // TODO: End check here
+                        // End check here
+                        EndCheck(checkEventNames, checkAnimNames);
 
                         break;
                     }
@@ -180,12 +197,42 @@ namespace FinTOKMAK.TimelineSystem.Runtime
                 
                 if (playableNode.nodeType == PlayableNodeType.EndMark)
                 {
-                    // TODO: End check here
-
+                    // End check here
+                    EndCheck(checkEventNames, checkAnimNames);
+                    
                     break;
                 }
                 PlayNode(playableNode, checkEventNames, checkAnimNames);
             }
+            
+            // When finished, stop listening to the event hook.
+            _eventSystemInvokeHook -= RemoveEventSet;
+        }
+
+        /// <summary>
+        /// The method to do the end check.
+        /// </summary>
+        /// <param name="checkEventNames">The HashSet to store all the event names to be checked.</param>
+        /// <param name="checkAnimNames">The HashSet to store all the animation names to be checked.</param>
+        /// <exception cref="MissingMemberException">When required event or animation is not played.</exception>
+        private void EndCheck(HashSet<string> checkEventNames, HashSet<string> checkAnimNames)
+        {
+            if (checkEventNames.Count != 0 || checkAnimNames.Count != 0)
+            {
+                foreach (string eventName in checkEventNames)
+                {
+                    Debug.LogWarning($"Event {eventName} is not invoked!");
+                }
+
+                foreach (string animName in checkAnimNames)
+                {
+                    Debug.LogWarning($"Animation {animName} is not invoked.");
+                }
+
+                throw new MissingMemberException("Required Event or Animation is not played.");
+            }
+            
+            Debug.Log("All the required events are invoked. All the required animation is played.");
         }
 
         /// <summary>
@@ -207,13 +254,15 @@ namespace FinTOKMAK.TimelineSystem.Runtime
                 // Remove the name of the event from the event hash set
                 checkEvent.Remove(node.field);
                 // TODO: Invoke the event here.
+                InvokeEvent(node.field);
             }
-            // Play the animation
+            // Trigger the animation
             else if (node.nodeType == PlayableNodeType.PlayAnim)
             {
                 // Remove the name of animation from the anim hash set
                 checkAnim.Remove(node.field);
-                // TODO: Play the animation here.
+                // TODO: Trigger the animation here.
+                animatorDict[node.target].SetTrigger(node.field);
             }
         }
 
