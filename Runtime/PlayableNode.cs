@@ -2,7 +2,7 @@
 {
     /// <summary>
     /// The playable node type
-    /// PlayAnim: play a certain animation
+    /// PlayAnim: trigger a certain animation
     /// InvokeEvent: invoke a certain event
     /// EndMark: end the entire timeline and trigger the timeline system check
     /// </summary>
@@ -34,7 +34,7 @@
         public string target;
 
         /// <summary>
-        /// The name of animation to be play
+        /// The name of animation trigger to be trigger
         /// Or the name of the event to be invoke
         /// No need when the PlayableNodeType is EndMark
         /// </summary>
