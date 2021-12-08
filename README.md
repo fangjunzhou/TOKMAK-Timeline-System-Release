@@ -10,8 +10,8 @@
 
 Use the Package Manager to install from url
 
-`https://github.com/Fangjun-Zhou/TOKMAK-Timeline-System-Release.git`
+`https://fintokmak.com:8091/fintokmak/tokmak-timeline-system-release.git`
 
 or add in the manifest.json
 
-`"com.fintokmak.timelinesystem": "https://github.com/Fangjun-Zhou/TOKMAK-Timeline-System-Release.git"`
+`"com.fintokmak.timelinesystem": "https://fintokmak.com:8091/fintokmak/tokmak-timeline-system-release.git"`
