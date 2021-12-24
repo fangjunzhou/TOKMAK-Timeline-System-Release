@@ -2,7 +2,10 @@
     "name": "FinTOKMAK.TimelineSystem.Runtime",
     "rootNamespace": "",
     "references": [
-        "GUID:8d06a79d7fbc6dc4b9a85c4b21d710a9"
+        "GUID:8d06a79d7fbc6dc4b9a85c4b21d710a9",
+        "GUID:52000dd8b76c649b199a21f023accca6",
+        "GUID:5cb2ec59697a4f9438a8f30dc412b4a9",
+        "GUID:6ec20d7bf46e38347a93da7ecf751332"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
