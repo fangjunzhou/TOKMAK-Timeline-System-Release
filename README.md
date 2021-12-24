@@ -4,6 +4,9 @@
 
 ```
 "com.serializabledictionary": "https://github.com/Fangjun-Zhou/Unity-SerializableDictionary.git#upm-serializabledictionary"
+"com.fintokmak.universaleventsystem": "https://github.com/Fangjun-Zhou/TOKMAK-Universal-Event-Release.git"
+"com.dbrizov.naughtyattributes": "https://github.com/dbrizov/NaughtyAttributes.git#upm",
+"com.hextantstudios.utilities": "https://github.com/hextantstudios/com.hextantstudios.utilities.git"
 ```
 
 # Install
