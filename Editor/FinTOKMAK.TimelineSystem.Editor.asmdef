@@ -2,7 +2,10 @@
     "name": "FinTOKMAK.TimelineSystem.Editor",
     "rootNamespace": "",
     "references": [
-        "GUID:d1b25efafe16b8240b25181c1d067da9"
+        "GUID:d1b25efafe16b8240b25181c1d067da9",
+        "GUID:b1e315b56e6994bc8a1c4d69001fabcf",
+        "GUID:52000dd8b76c649b199a21f023accca6",
+        "GUID:5cb2ec59697a4f9438a8f30dc412b4a9"
     ],
     "includePlatforms": [
         "Editor"
