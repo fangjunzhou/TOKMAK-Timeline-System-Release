@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using FinTOKMAK.EventSystem.Runtime;
 using UnityEngine;
 
 namespace FinTOKMAK.TimelineSystem.Runtime
@@ -11,6 +12,7 @@ namespace FinTOKMAK.TimelineSystem.Runtime
         
     }
 
+    [RequireComponent(typeof(TimelineEventManager))]
     public class TimelineSystem : MonoBehaviour
     {
         #region Public Field
@@ -22,13 +24,18 @@ namespace FinTOKMAK.TimelineSystem.Runtime
         public AnimatorDict animatorDict = new AnimatorDict();
 
         #endregion
-        
-        #region Private Field
+
+        #region Hide Public Field
 
         /// <summary>
-        /// A dict for the event system to call the event by event name.
+        /// The event manager of the Timeline System.
         /// </summary>
-        private Dictionary<string, Action> _eventTable = new Dictionary<string, Action>();
+        [HideInInspector]
+        public TimelineEventManager eventManager;
+
+        #endregion
+        
+        #region Private Field
 
         /// <summary>
         /// The string-AnimEventInvoker dictionary that keep track of
@@ -39,12 +46,14 @@ namespace FinTOKMAK.TimelineSystem.Runtime
         /// <summary>
         /// The listener of local event invoke system.
         /// </summary>
-        private Action<string> _eventSystemInvokeHook;
+        private Action<string, IEventData> _eventSystemInvokeHook;
 
         #endregion
 
         private void Awake()
         {
+            eventManager = gameObject.GetComponent<TimelineEventManager>();
+            
             // Initialize the animEventTable
             foreach (string animatorDictKey in animatorDict.Keys)
             {
@@ -80,19 +89,11 @@ namespace FinTOKMAK.TimelineSystem.Runtime
         /// <summary>
         /// The method for the upper system register timeline events.
         /// </summary>
-        /// <param name="name">The name of the event.</param>
+        /// <param name="eventName">The name of the event.</param>
         /// <param name="regEvent">The event to register.</param>
-        public void RegisterEvent(string name, Action regEvent)
+        public void RegisterEvent(string eventName, Action<IEventData> regEvent)
         {
-            // Check if the eventTable has the event with the same name.
-            // If not, create a event table key-value pair.
-            if (!_eventTable.ContainsKey(name))
-            {
-                _eventTable.Add(name, () => { });
-            }
-            
-            // Register the event.
-            _eventTable[name] += regEvent;
+            eventManager.RegisterEvent(eventName, regEvent);
         }
 
         /// <summary>
@@ -100,25 +101,19 @@ namespace FinTOKMAK.TimelineSystem.Runtime
         /// </summary>
         /// <param name="name">The name of event to unregister.</param>
         /// <param name="unregEvent">The target event to unregister.</param>
-        public void UnRegisterEvent(string name, Action unregEvent)
+        public void UnRegisterEvent(string eventName, Action<IEventData> unregEvent)
         {
-            // Check if there's a event with the certain name.
-            if (!_eventTable.ContainsKey(name))
-            {
-                throw new InvalidOperationException($"No event with name {name}!");
-            }
-
-            _eventTable[name] -= unregEvent;
+            eventManager.UnRegisterEvent(eventName, unregEvent);
         }
 
         /// <summary>
         /// The method to invoke a event.
         /// </summary>
         /// <param name="eventName">The name of the event.</param>
-        public void InvokeEvent(string eventName)
+        public void InvokeEvent(string eventName, IEventData data)
         {
-            _eventTable[eventName]?.Invoke();
-            _eventSystemInvokeHook?.Invoke(eventName);
+            eventManager.InvokeEvent(eventName, data);
+            _eventSystemInvokeHook?.Invoke(eventName, data);
         }
 
         /// <summary>
@@ -162,7 +157,7 @@ namespace FinTOKMAK.TimelineSystem.Runtime
             }
 
             // The internal function to remove the event from the event set
-            void RemoveEventSet(string s)
+            void RemoveEventSet(string s, IEventData data)
             {
                 checkEventNames.Remove(s);
             }
@@ -178,7 +173,7 @@ namespace FinTOKMAK.TimelineSystem.Runtime
             {
                 // Calculate the wait time
                 float waitTime = playableNode.time - (Time.realtimeSinceStartup - startTime);
-                // If the node should have been played, play immediatly.
+                // If the node should have been played, play immediately.
                 if (waitTime <= 0)
                 {
                     if (playableNode.nodeType == PlayableNodeType.EndMark)
@@ -254,7 +249,7 @@ namespace FinTOKMAK.TimelineSystem.Runtime
                 // Remove the name of the event from the event hash set
                 checkEvent.Remove(node.field);
                 // TODO: Invoke the event here.
-                InvokeEvent(node.field);
+                InvokeEvent(node.field, new EventData());
             }
             // Trigger the animation
             else if (node.nodeType == PlayableNodeType.PlayAnim)

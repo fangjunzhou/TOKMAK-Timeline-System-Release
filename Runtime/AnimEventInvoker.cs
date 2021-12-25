@@ -1,4 +1,5 @@
 ﻿using System;
+using FinTOKMAK.EventSystem.Runtime;
 using UnityEngine;
 
 namespace FinTOKMAK.TimelineSystem.Runtime
@@ -10,7 +11,7 @@ namespace FinTOKMAK.TimelineSystem.Runtime
         /// <summary>
         /// The event handler for the timeline system to register.
         /// </summary>
-        public Action<string> eventHandler;
+        public Action<string, IEventData> eventHandler;
 
         #endregion
 
@@ -19,10 +20,10 @@ namespace FinTOKMAK.TimelineSystem.Runtime
         /// <summary>
         /// The method for the animation event to invoke an event.
         /// </summary>
-        /// <param name="name">The name of the event.</param>
-        public void InvokeEvent(string name)
+        /// <param name="eventName">The name of the event.</param>
+        public void InvokeEvent(string eventName)
         {
-            eventHandler?.Invoke(name);
+            eventHandler?.Invoke(eventName, new EventData());
         }
 
         #endregion
