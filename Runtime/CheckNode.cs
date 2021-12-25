@@ -22,10 +22,15 @@
         public CheckNodeType nodeType;
 
         /// <summary>
-        /// The animation clip to play
-        /// Or the event name to check
+        /// The animation variable to set
         /// </summary>
-        public string field;
+        public string targetAnimVar;
+
+        /// <summary>
+        /// The event name to check
+        /// </summary>
+        [TimelineEvent]
+        public string targetEvent;
 
         #endregion
     }

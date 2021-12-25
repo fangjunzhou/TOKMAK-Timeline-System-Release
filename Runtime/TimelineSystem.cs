@@ -148,11 +148,11 @@ namespace FinTOKMAK.TimelineSystem.Runtime
             {
                 if (checkNode.nodeType == CheckNodeType.CheckAnim)
                 {
-                    checkAnimNames.Add(checkNode.field);
+                    checkAnimNames.Add(checkNode.targetAnimVar);
                 }
                 else if (checkNode.nodeType == CheckNodeType.CheckEvent)
                 {
-                    checkEventNames.Add(checkNode.field);
+                    checkEventNames.Add(checkNode.targetEvent);
                 }
             }
 
@@ -247,17 +247,37 @@ namespace FinTOKMAK.TimelineSystem.Runtime
             if (node.nodeType == PlayableNodeType.InvokeEvent)
             {
                 // Remove the name of the event from the event hash set
-                checkEvent.Remove(node.field);
+                checkEvent.Remove(node.eventName);
                 // TODO: Invoke the event here.
-                InvokeEvent(node.field, new EventData());
+                InvokeEvent(node.eventName, new EventData());
             }
             // Trigger the animation
             else if (node.nodeType == PlayableNodeType.PlayAnim)
             {
                 // Remove the name of animation from the anim hash set
-                checkAnim.Remove(node.field);
-                // TODO: Trigger the animation here.
-                animatorDict[node.target].SetTrigger(node.field);
+                checkAnim.Remove(node.targetVar);
+
+                switch (node.animOperationType)
+                {
+                    case AnimOperationType.SetTrigger:
+                        animatorDict[node.targetAnimator].SetTrigger(node.targetVar);
+                        break;
+                    
+                    case AnimOperationType.SetBool:
+                        animatorDict[node.targetAnimator].SetBool(node.targetVar, node.boolValue);
+                        break;
+                    
+                    case AnimOperationType.SetFloat:
+                        animatorDict[node.targetAnimator].SetFloat(node.targetVar, node.floatValue);
+                        break;
+                    
+                    case AnimOperationType.SetInt:
+                        animatorDict[node.targetAnimator].SetInteger(node.targetVar, node.intValue);
+                        break;
+
+                    default:
+                        throw new ArgumentException("AnimOperationType not supported.");
+                }
             }
         }
 

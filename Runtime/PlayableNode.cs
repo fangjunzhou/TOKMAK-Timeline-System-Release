@@ -12,6 +12,14 @@
         InvokeEvent,
         EndMark
     }
+
+    public enum AnimOperationType
+    {
+        SetTrigger,
+        SetBool,
+        SetFloat,
+        SetInt
+    }
     
     [System.Serializable]
     public class PlayableNode
@@ -31,14 +39,38 @@
         /// <summary>
         /// The target animator (only enabled when PlayableNodeType is PlayAnim)
         /// </summary>
-        public string target;
+        public string targetAnimator;
 
         /// <summary>
-        /// The name of animation trigger to be trigger
-        /// Or the name of the event to be invoke
-        /// No need when the PlayableNodeType is EndMark
+        /// The anim operation to be done (only enabled when PlayableNodeType is PlayAnim)
         /// </summary>
-        public string field;
+        public AnimOperationType animOperationType;
+
+        /// <summary>
+        /// The target variable of the animator (only enabled when PlayableNodeType is PlayAnim)
+        /// </summary>
+        public string targetVar;
+
+        /// <summary>
+        /// The bool value to be set (only enabled when PlayableNodeType is PlayAnim and animOperationType is SetBool)
+        /// </summary>
+        public bool boolValue;
+
+        /// <summary>
+        /// The float value to be set (only enabled when PlayableNodeType is PlayAnim and animOperationType is SetFloat)
+        /// </summary>
+        public float floatValue;
+
+        /// <summary>
+        /// The int value to be set (only enabled when PlayableNodeType is PlayAnim and animOperationType is SetInt)
+        /// </summary>
+        public int intValue;
+
+        /// <summary>
+        /// The name of the event to be invoke (only enabled when PlayableNodeType is InvokeEvent)
+        /// </summary>
+        [TimelineEvent]
+        public string eventName;
 
         #endregion
     }
