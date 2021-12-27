@@ -11,12 +11,12 @@ namespace FinTOKMAK.TimelineSystem.Runtime
         /// <summary>
         /// All the playable nodes
         /// </summary>
-        public List<PlayableNode> playableNodes;
+        public List<PlayableNode> playableNodes = new List<PlayableNode>();
 
         /// <summary>
         /// All the check nodes
         /// </summary>
-        public List<CheckNode> checkNodes;
+        public List<CheckNode> checkNodes = new List<CheckNode>();
 
         #endregion
     }
