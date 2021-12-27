@@ -67,6 +67,14 @@ namespace Package.Editor
                 EditorGUILayout.HelpBox("No Timeline Event Config", MessageType.Error);
                 return;
             }
+            
+            if (_eventConfig.eventNames.Count == 0)
+            {
+                EditorGUILayout.HelpBox(
+                    "No event in the event config. There should be at least one event in the config.",
+                    MessageType.Error);
+                return;
+            }
 
                 // The vertical layout for Playable and Check Nodes
             EditorGUILayout.BeginVertical();
@@ -172,10 +180,20 @@ namespace Package.Editor
                     GUILayout.Space(10);
                     if (GUILayout.Button("+", EditorStyles.miniButtonRight, GUILayout.Width(30)))
                     {
-                        _timeline.playableNodes.Add(new PlayableNode()
+                        if (_timeline.playableNodes.Count > 0)
                         {
-                            time = _timeline.playableNodes[_timeline.playableNodes.Count-1].time
-                        });
+                            _timeline.playableNodes.Add(new PlayableNode()
+                            {
+                                time = _timeline.playableNodes[_timeline.playableNodes.Count-1].time
+                            });
+                        }
+                        else
+                        {
+                            _timeline.playableNodes.Add(new PlayableNode()
+                            {
+                                time = 0
+                            });
+                        }
                     }
                 }
                 EditorGUILayout.EndHorizontal();
