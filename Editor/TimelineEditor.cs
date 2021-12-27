@@ -30,6 +30,8 @@ namespace Package.Editor
         
         private Vector2 _checkNodesScrollView;
 
+        private float _titleHeight = 60;
+
         #endregion
         
         [MenuItem("FinTOKMAK/Timeline System/Timeline Editor")]
@@ -76,10 +78,12 @@ namespace Package.Editor
                 return;
             }
 
-                // The vertical layout for Playable and Check Nodes
+            // The vertical layout for Playable and Check Nodes
             EditorGUILayout.BeginVertical();
-            
-            EditorGUILayout.BeginVertical("Box", GUILayout.ExpandHeight(true));
+
+            Rect windowRect = this.position;
+
+            EditorGUILayout.BeginVertical("Box", GUILayout.Height((windowRect.height - _titleHeight) / 2));
             {
                 GUILayout.Label("Playable Nodes", EditorStyles.boldLabel);
 
@@ -201,7 +205,7 @@ namespace Package.Editor
             EditorGUILayout.EndVertical();
             
             // Check nodes
-            EditorGUILayout.BeginVertical("Box", GUILayout.ExpandHeight(true));
+            EditorGUILayout.BeginVertical("Box", GUILayout.Height((windowRect.height - _titleHeight) / 2));
             {
                 GUILayout.Label("Check Nodes", EditorStyles.boldLabel);
 
