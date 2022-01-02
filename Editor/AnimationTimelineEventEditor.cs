@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using FinTOKMAK.EventSystem.Runtime;
 using FinTOKMAK.TimelineSystem.Runtime;
 using Hextant;
@@ -26,6 +28,21 @@ namespace Package.Editor
         /// </summary>
         private AnimationEvent[] _animationEvents = new AnimationEvent[]{};
 
+        /// <summary>
+        /// The current working AnimationWindow.
+        /// </summary>
+        private AnimationWindow _window;
+
+        /// <summary>
+        /// The frame current play head is pointing to.
+        /// </summary>
+        private int _frame;
+
+        /// <summary>
+        /// The time current play head is pointing to.
+        /// </summary>
+        private float _time;
+
         #endregion
 
         #region Editor Variables
@@ -52,25 +69,32 @@ namespace Package.Editor
 
         private void OnGUI()
         {
+            UpdateWorkingTarget();
+            
             titleContent.text = "Animation Timeline Event Editor";
 
+            // Working window.
+            EditorGUILayout.BeginVertical("Box");
+            {
+                if (_window == null)
+                {
+                    EditorGUILayout.HelpBox("No Animation Window!", MessageType.Warning);
+                }
+
+                if (_clip == null)
+                {
+                    EditorGUILayout.HelpBox("No Working Clip!", MessageType.Warning);
+                }
+            }
+            EditorGUILayout.EndVertical();
+            
             // Working clip
             EditorGUILayout.BeginVertical("Box");
 
             {
                 GUILayout.Label("Working clip", EditorStyles.boldLabel);
-                
-                EditorGUI.BeginChangeCheck();
-                _clip = (AnimationClip) EditorGUILayout.ObjectField("Current clip", _clip, typeof(AnimationClip),
-                    false);
-                if (EditorGUI.EndChangeCheck())
-                {
-                    // New animation clip is dragged in.
-                    if (_clip != null)
-                    {
-                        _animationEvents = _clip.events;
-                    }
-                }
+
+                EditorGUILayout.ObjectField("Current clip", _clip, typeof(AnimationClip));
             }
             
             if (_eventConfig == null)
@@ -81,7 +105,7 @@ namespace Package.Editor
             }
 
             EditorGUILayout.EndVertical();
-            
+
             // Animation event editor
 
             EditorGUILayout.BeginVertical("Box");
@@ -119,11 +143,33 @@ namespace Package.Editor
                             }
 
                             index = EditorGUILayout.Popup("Animation event", index, options);
+                            Debug.Log(index);
                             _animationEvents[i].stringParameter = options[index];
-
+                            AnimationUtility.SetAnimationEvents(_clip, _animationEvents);
                         }
                         
                         EditorGUILayout.EndVertical();
+                    }
+
+                    if (GUILayout.Button("Add Event"))
+                    {
+                        if (_window == null || _clip == null)
+                        {
+                            EditorUtility.DisplayDialog("No Working Clip",
+                                "You have no working animation clip to operate! You cannot add Timeline Event!", "OK");
+                            return;
+                        }
+                    
+                        List<AnimationEvent> events = AnimationUtility.GetAnimationEvents(_clip).ToList();
+                        events.Add(new AnimationEvent()
+                        {
+                            time = _time,
+                            functionName = "InvokeEvent"
+                        });
+                        AnimationUtility.SetAnimationEvents(_clip, events.ToArray());
+                        
+                        // Update event display
+                        _animationEvents = _clip.events;
                     }
                 }
             
@@ -137,5 +183,37 @@ namespace Package.Editor
                 AnimationUtility.SetAnimationEvents(_clip, _animationEvents);
             }
         }
+        
+        #region Private Methods
+
+        /// <summary>
+        /// Call this method to get the current working AnimationWindow, anim clip and other info.
+        /// </summary>
+        private void UpdateWorkingTarget()
+        {
+            // Get window
+            if (_window == null)
+            {
+                _window = AnimationWindow.GetWindow<AnimationWindow>();
+            }
+            // Get clip
+            _clip = _window.animationClip;
+            // Get frame
+            _frame = _window.frame;
+            // Get time
+            _time = _window.time;
+            
+            // New animation clip is dragged in.
+            if (_clip != null)
+            {
+                _animationEvents = _clip.events;
+            }
+            else
+            {
+                _animationEvents = Array.Empty<AnimationEvent>();
+            }
+        }
+
+        #endregion
     }
 }
