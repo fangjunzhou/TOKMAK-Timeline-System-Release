@@ -1,6 +1,6 @@
 {
   "name": "com.fintokmak.timelinesystem",
-  "version": "0.0.1",
+  "version": "0.1.2",
   "displayName": "TOKMAK Timeline System",
   "description": "A timeline system developed by FinTOKMAK Studio",
   "unity": "2020.3",
