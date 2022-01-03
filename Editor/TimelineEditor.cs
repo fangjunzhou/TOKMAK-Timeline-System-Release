@@ -134,6 +134,7 @@ namespace Package.Editor
                                             _timeline.playableNodes[i].intValue);
                                     }
                                 }
+                                // Event
                                 else if (_timeline.playableNodes[i].nodeType == PlayableNodeType.InvokeEvent)
                                 {
                                     String[] options = _eventConfig.eventNames.ToArray();
@@ -147,8 +148,13 @@ namespace Package.Editor
                                         index = 0;
                                         _timeline.playableNodes[i].eventName = options[index];
                                     }
+                                    EditorGUI.BeginChangeCheck();
                                     index = EditorGUILayout.Popup("Event", index, options);
-                                    _timeline.playableNodes[i].eventName = options[index];
+                                    if (EditorGUI.EndChangeCheck())
+                                    {
+                                        _timeline.playableNodes[i].eventName = options[index];
+                                        EditorUtility.SetDirty(_timeline);
+                                    }
 
                                     EditorGUILayout.TextArea(_timeline.playableNodes[i].eventName);
                                 }
