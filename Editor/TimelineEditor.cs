@@ -54,7 +54,14 @@ namespace Package.Editor
             EditorGUILayout.BeginVertical("Box");
             {
                 GUILayout.Label("Working Timeline", EditorStyles.boldLabel);
+                
+                EditorGUILayout.BeginHorizontal();
                 _timeline = (Timeline) EditorGUILayout.ObjectField(_timeline, typeof(Timeline), false);
+                if (GUILayout.Button("Save", GUILayout.Width(100)))
+                {
+                    AssetDatabase.SaveAssets();
+                }
+                EditorGUILayout.EndHorizontal();
             }
             EditorGUILayout.EndVertical();
 
