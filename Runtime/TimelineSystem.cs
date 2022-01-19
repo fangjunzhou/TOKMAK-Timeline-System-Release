@@ -141,7 +141,10 @@ namespace FinTOKMAK.TimelineSystem.Runtime
             
             // Finish implement PlayTimeline
             Coroutine coroutine = StartCoroutine(TimelineCoroutine(timeline));
-            _playingTimeline.Add(timeline, coroutine);
+            if (!_playingTimeline.ContainsKey(timeline))
+                _playingTimeline.Add(timeline, coroutine);
+            else
+                _playingTimeline[timeline] = coroutine;
         }
 
         /// <summary>
