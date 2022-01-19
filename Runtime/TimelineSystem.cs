@@ -53,6 +53,11 @@ namespace FinTOKMAK.TimelineSystem.Runtime
         /// </summary>
         private Action<string, IEventData> _eventSystemInvokeHook;
 
+        /// <summary>
+        /// All the playing timeline.
+        /// </summary>
+        private Dictionary<Timeline, Coroutine> _playingTimeline = new Dictionary<Timeline, Coroutine>();
+
         #endregion
 
         private void Awake()
@@ -124,11 +129,32 @@ namespace FinTOKMAK.TimelineSystem.Runtime
         /// <summary>
         /// The method for SkillSystem and WeaponSystem to play a timeline.
         /// </summary>
-        /// <param name="timeline">The timeline to play</param>
-        public void PlayTimeline(Timeline timeline)
+        /// <param name="timeline">The timeline to play.</param>
+        /// <param name="allowDuplicate">If the timeline player allow playing duplicate timeline.</param>
+        public void PlayTimeline(Timeline timeline, bool allowDuplicate = false)
         {
+            if(!allowDuplicate && _playingTimeline.ContainsKey(timeline))
+            {
+                Debug.Log("Duplicate timeline.");
+                return;
+            }
+            
             // Finish implement PlayTimeline
-            StartCoroutine(TimelineCoroutine(timeline));
+            Coroutine coroutine = StartCoroutine(TimelineCoroutine(timeline));
+            _playingTimeline.Add(timeline, coroutine);
+        }
+
+        /// <summary>
+        /// Stop a certain playing timeline.
+        /// </summary>
+        /// <param name="timeline"></param>
+        public void StopTimeline(Timeline timeline)
+        {
+            if (!_playingTimeline.ContainsKey(timeline))
+                throw new InvalidOperationException($"Timeline: {timeline} is not playing currently.");
+            
+            StopCoroutine(_playingTimeline[timeline]);
+            _playingTimeline.Remove(timeline);
         }
 
         #endregion
@@ -207,6 +233,7 @@ namespace FinTOKMAK.TimelineSystem.Runtime
             
             // When finished, stop listening to the event hook.
             _eventSystemInvokeHook -= RemoveEventSet;
+            _playingTimeline.Remove(timeline);
         }
 
         /// <summary>
