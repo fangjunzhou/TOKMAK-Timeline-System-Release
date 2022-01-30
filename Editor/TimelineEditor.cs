@@ -120,9 +120,12 @@ namespace Package.Editor
                                     _timeline.playableNodes[i].animOperationType =
                                         (AnimOperationType) EditorGUILayout.EnumPopup("Anim Operation Type",
                                             _timeline.playableNodes[i].animOperationType);
-                                    _timeline.playableNodes[i].targetVar = EditorGUILayout.TextField(
-                                        "Target Animator Variable",
-                                        _timeline.playableNodes[i].targetVar);
+                                    if (_timeline.playableNodes[i].animOperationType != AnimOperationType.PlayDirectly)
+                                    {
+                                        _timeline.playableNodes[i].targetVar = EditorGUILayout.TextField(
+                                            "Target Animator Variable",
+                                            _timeline.playableNodes[i].targetVar);
+                                    }
 
                                     // Different anim operation
                                     if (_timeline.playableNodes[i].animOperationType == AnimOperationType.SetBool)

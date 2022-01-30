@@ -314,7 +314,7 @@ namespace FinTOKMAK.TimelineSystem.Runtime
                         break;
                     
                     case AnimOperationType.PlayDirectly:
-                        animatorDict[node.targetAnimator].Play(node.targetAnimation, node.targetLayer);
+                        animatorDict[node.targetAnimator].Play(node.targetAnimation, node.targetLayer, 0);
                         break;
 
                     default:
