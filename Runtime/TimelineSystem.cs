@@ -259,7 +259,7 @@ namespace FinTOKMAK.TimelineSystem.Runtime
                     Debug.LogWarning($"Animation {animName} is not invoked.");
                 }
 
-                throw new MissingMemberException("Required Event or Animation is not played.");
+                Debug.LogError("Required Event or Animation is not played.");
             }
 
             if (useDebug)
