@@ -18,7 +18,8 @@
         SetTrigger,
         SetBool,
         SetFloat,
-        SetInt
+        SetInt,
+        PlayDirectly
     }
     
     [System.Serializable]
@@ -65,6 +66,16 @@
         /// The int value to be set (only enabled when PlayableNodeType is PlayAnim and animOperationType is SetInt)
         /// </summary>
         public int intValue;
+
+        /// <summary>
+        /// The animation to play directly (only enabled when PlayableNodeType is PlayAnim and animOperationType is PlayDirectly)
+        /// </summary>
+        public string targetAnimation;
+
+        /// <summary>
+        /// The target layer to play directly (only enabled when PlayableNodeType is PlayAnim and animOperationType is PlayDirectly)
+        /// </summary>
+        public int targetLayer;
 
         /// <summary>
         /// The name of the event to be invoke (only enabled when PlayableNodeType is InvokeEvent)

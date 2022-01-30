@@ -140,6 +140,13 @@ namespace Package.Editor
                                         _timeline.playableNodes[i].intValue = EditorGUILayout.IntField("Int Value",
                                             _timeline.playableNodes[i].intValue);
                                     }
+                                    else if (_timeline.playableNodes[i].animOperationType == AnimOperationType.PlayDirectly)
+                                    {
+                                        _timeline.playableNodes[i].targetAnimation = EditorGUILayout.TextField("Target Animation",
+                                            _timeline.playableNodes[i].targetAnimation);
+                                        _timeline.playableNodes[i].targetLayer = EditorGUILayout.IntField("Target Layer",
+                                            _timeline.playableNodes[i].targetLayer);
+                                    }
                                 }
                                 // Event
                                 else if (_timeline.playableNodes[i].nodeType == PlayableNodeType.InvokeEvent)

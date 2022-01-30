@@ -312,6 +312,10 @@ namespace FinTOKMAK.TimelineSystem.Runtime
                     case AnimOperationType.SetInt:
                         animatorDict[node.targetAnimator].SetInteger(node.targetVar, node.intValue);
                         break;
+                    
+                    case AnimOperationType.PlayDirectly:
+                        animatorDict[node.targetAnimator].Play(node.targetAnimation, node.targetLayer);
+                        break;
 
                     default:
                         throw new ArgumentException("AnimOperationType not supported.");
