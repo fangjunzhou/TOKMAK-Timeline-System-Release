@@ -157,6 +157,13 @@ namespace FinTOKMAK.TimelineSystem.Runtime
                 throw new InvalidOperationException($"Timeline: {timeline} is not playing currently.");
             
             StopCoroutine(_playingTimeline[timeline]);
+            
+            // Play all the interrupt nodes
+            foreach (PlayableNode interruptNode in timeline.interruptNodes)
+            {
+                PlayNode(interruptNode, null, null, false);
+            }
+            
             _playingTimeline.Remove(timeline);
         }
 
@@ -274,7 +281,7 @@ namespace FinTOKMAK.TimelineSystem.Runtime
         /// <param name="node">The PlayableNode to be played.</param>
         /// <param name="checkEvent">The event to be checked.</param>
         /// <param name="checkAnim">The animation to be checked.</param>
-        private void PlayNode(PlayableNode node, HashSet<string> checkEvent, HashSet<string> checkAnim)
+        private void PlayNode(PlayableNode node, HashSet<string> checkEvent, HashSet<string> checkAnim, bool useCheckNode = true)
         {
             if (node.nodeType == PlayableNodeType.EndMark)
             {
@@ -284,16 +291,22 @@ namespace FinTOKMAK.TimelineSystem.Runtime
             // Invoke the event
             if (node.nodeType == PlayableNodeType.InvokeEvent)
             {
-                // Remove the name of the event from the event hash set
-                checkEvent.Remove(node.eventName);
+                if (useCheckNode)
+                {
+                    // Remove the name of the event from the event hash set
+                    checkEvent.Remove(node.eventName);
+                }
                 // TODO: Invoke the event here.
                 InvokeEvent(node.eventName, new EventData());
             }
             // Trigger the animation
             else if (node.nodeType == PlayableNodeType.PlayAnim)
             {
-                // Remove the name of animation from the anim hash set
-                checkAnim.Remove(node.targetVar);
+                if (useCheckNode)
+                {
+                    // Remove the name of animation from the anim hash set
+                    checkAnim.Remove(node.targetVar);
+                }
 
                 switch (node.animOperationType)
                 {

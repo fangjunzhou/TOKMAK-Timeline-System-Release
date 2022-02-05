@@ -18,6 +18,11 @@ namespace FinTOKMAK.TimelineSystem.Runtime
         /// </summary>
         public List<CheckNode> checkNodes = new List<CheckNode>();
 
+        /// <summary>
+        /// All the interrupt nodes.
+        /// </summary>
+        public List<PlayableNode> interruptNodes = new List<PlayableNode>();
+
         #endregion
     }
 }

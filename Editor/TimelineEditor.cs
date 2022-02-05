@@ -29,6 +29,8 @@ namespace Package.Editor
         private Vector2 _playableNodesScrollView;
         
         private Vector2 _checkNodesScrollView;
+        
+        private Vector2 _interruptNodesScrollView;
 
         private float _titleHeight = 60;
 
@@ -90,7 +92,7 @@ namespace Package.Editor
 
             Rect windowRect = this.position;
 
-            EditorGUILayout.BeginVertical("Box", GUILayout.Height((windowRect.height - _titleHeight) / 2));
+            EditorGUILayout.BeginVertical("Box", GUILayout.Height((windowRect.height - _titleHeight) / 3));
             {
                 GUILayout.Label("Playable Nodes", EditorStyles.boldLabel);
 
@@ -226,9 +228,9 @@ namespace Package.Editor
                 EditorGUILayout.EndHorizontal();
             }
             EditorGUILayout.EndVertical();
-            
+
             // Check nodes
-            EditorGUILayout.BeginVertical("Box", GUILayout.Height((windowRect.height - _titleHeight) / 2));
+            EditorGUILayout.BeginVertical("Box", GUILayout.Height((windowRect.height - _titleHeight) / 3));
             {
                 GUILayout.Label("Check Nodes", EditorStyles.boldLabel);
 
@@ -301,6 +303,142 @@ namespace Package.Editor
                     if (GUILayout.Button("+", EditorStyles.miniButtonRight, GUILayout.Width(30)))
                     {
                         _timeline.checkNodes.Add(new CheckNode());
+                    }
+                }
+                EditorGUILayout.EndHorizontal();
+            }
+            EditorGUILayout.EndVertical();
+            
+            // Interrupt Node
+            EditorGUILayout.BeginVertical("Box", GUILayout.Height((windowRect.height - _titleHeight) / 3));
+            {
+                GUILayout.Label("Interrupt Nodes", EditorStyles.boldLabel);
+
+                EditorGUILayout.BeginVertical("Box");
+                {
+                    _interruptNodesScrollView = EditorGUILayout.BeginScrollView(_interruptNodesScrollView);
+                    {
+                        EditorGUILayout.BeginHorizontal();
+                
+                        for (int i = 0; i < _timeline.interruptNodes.Count; i++)
+                        {
+                            EditorGUILayout.BeginVertical("Box", GUILayout.Width(250), GUILayout.ExpandHeight(true));
+                            {
+                                GUILayout.Label($"Node {i}", EditorStyles.boldLabel);
+                                _timeline.interruptNodes[i].nodeType =
+                                    (PlayableNodeType) EditorGUILayout.EnumPopup("Node Type",
+                                        _timeline.interruptNodes[i].nodeType);
+                                
+                                // Anim Node
+                                if (_timeline.interruptNodes[i].nodeType == PlayableNodeType.PlayAnim)
+                                {
+                                    _timeline.interruptNodes[i].targetAnimator =
+                                        EditorGUILayout.TextField("Target Animator",
+                                            _timeline.interruptNodes[i].targetAnimator);
+                                    _timeline.interruptNodes[i].animOperationType =
+                                        (AnimOperationType) EditorGUILayout.EnumPopup("Anim Operation Type",
+                                            _timeline.interruptNodes[i].animOperationType);
+                                    if (_timeline.interruptNodes[i].animOperationType != AnimOperationType.PlayDirectly)
+                                    {
+                                        _timeline.interruptNodes[i].targetVar = EditorGUILayout.TextField(
+                                            "Target Animator Variable",
+                                            _timeline.interruptNodes[i].targetVar);
+                                    }
+
+                                    // Different anim operation
+                                    if (_timeline.interruptNodes[i].animOperationType == AnimOperationType.SetBool)
+                                    {
+                                        _timeline.interruptNodes[i].boolValue = EditorGUILayout.Toggle("Bool Value",
+                                            _timeline.interruptNodes[i].boolValue);
+                                    }
+                                    else if (_timeline.interruptNodes[i].animOperationType == AnimOperationType.SetFloat)
+                                    {
+                                        _timeline.interruptNodes[i].floatValue = EditorGUILayout.FloatField("Float Value",
+                                            _timeline.interruptNodes[i].floatValue);
+                                    }
+                                    else if (_timeline.interruptNodes[i].animOperationType == AnimOperationType.SetInt)
+                                    {
+                                        _timeline.interruptNodes[i].intValue = EditorGUILayout.IntField("Int Value",
+                                            _timeline.interruptNodes[i].intValue);
+                                    }
+                                    else if (_timeline.interruptNodes[i].animOperationType == AnimOperationType.PlayDirectly)
+                                    {
+                                        _timeline.interruptNodes[i].targetAnimation = EditorGUILayout.TextField("Target Animation",
+                                            _timeline.interruptNodes[i].targetAnimation);
+                                        _timeline.interruptNodes[i].targetLayer = EditorGUILayout.IntField("Target Layer",
+                                            _timeline.interruptNodes[i].targetLayer);
+                                    }
+                                }
+                                // Event
+                                else if (_timeline.interruptNodes[i].nodeType == PlayableNodeType.InvokeEvent)
+                                {
+                                    String[] options = _eventConfig.eventNames.ToArray();
+                                    int index;
+                                    if (_eventConfig.eventNames.Contains(_timeline.interruptNodes[i].eventName))
+                                    {
+                                        index = _eventConfig.eventNames.IndexOf(_timeline.interruptNodes[i].eventName);
+                                    }
+                                    else
+                                    {
+                                        index = 0;
+                                        _timeline.interruptNodes[i].eventName = options[index];
+                                    }
+                                    EditorGUI.BeginChangeCheck();
+                                    index = EditorGUILayout.Popup("Event", index, options);
+                                    if (EditorGUI.EndChangeCheck())
+                                    {
+                                        _timeline.interruptNodes[i].eventName = options[index];
+                                        EditorUtility.SetDirty(_timeline);
+                                    }
+
+                                    EditorGUILayout.TextArea(_timeline.interruptNodes[i].eventName);
+                                }
+                                
+                                GUILayout.FlexibleSpace();
+
+                                if (GUILayout.Button("-"))
+                                {
+                                    _timeline.interruptNodes.RemoveAt(i);
+                                }
+                            }
+                            EditorGUILayout.EndVertical();
+                        }
+                        
+                        EditorGUILayout.EndHorizontal();
+                    }
+                    EditorGUILayout.EndScrollView();
+                }
+                EditorGUILayout.EndVertical();
+
+                EditorGUILayout.BeginHorizontal();
+                {
+                    // Left buttons
+                    
+                    GUILayout.FlexibleSpace();
+                    
+                    // Right buttons
+                    
+                    if (GUILayout.Button("Sort", EditorStyles.miniButtonRight, GUILayout.Width(50)))
+                    {
+                        _timeline.interruptNodes = _timeline.interruptNodes.OrderBy(x => x.time).ToList();
+                    }
+                    GUILayout.Space(10);
+                    if (GUILayout.Button("+", EditorStyles.miniButtonRight, GUILayout.Width(30)))
+                    {
+                        if (_timeline.interruptNodes.Count > 0)
+                        {
+                            _timeline.interruptNodes.Add(new PlayableNode()
+                            {
+                                time = _timeline.interruptNodes[_timeline.interruptNodes.Count-1].time
+                            });
+                        }
+                        else
+                        {
+                            _timeline.interruptNodes.Add(new PlayableNode()
+                            {
+                                time = 0
+                            });
+                        }
                     }
                 }
                 EditorGUILayout.EndHorizontal();
