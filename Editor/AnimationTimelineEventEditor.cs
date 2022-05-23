@@ -143,7 +143,6 @@ namespace Package.Editor
                             }
 
                             index = EditorGUILayout.Popup("Animation event", index, options);
-                            Debug.Log(index);
                             _animationEvents[i].stringParameter = options[index];
                             AnimationUtility.SetAnimationEvents(_clip, _animationEvents);
                         }
