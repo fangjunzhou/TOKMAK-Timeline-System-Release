@@ -5,8 +5,11 @@
   "description": "A timeline system developed by FinTOKMAK Studio",
   "unity": "2020.3",
   "unityRelease": "0b5",
-  "license": "GPL",
+  "license": "MIT",
   "dependencies": {
+    "com.fintokmak.serializabledictionary": "0.1.0",
+    "com.fintokmak.universaleventsystem": "0.2.4",
+    "com.hextantstudios.utilities": "0.1.0"
   },
   "keywords": [
   ],

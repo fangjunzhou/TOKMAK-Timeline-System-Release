@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added Timeline Editor.
 - Added Animation Timeline Event Editor.
 
-[Unreleased]: https://fintokmak.com:8091/fintokmak/tokmak-timeline-system-release
-[0.1.1]: https://fintokmak.com:8091/fintokmak/tokmak-timeline-system-release/-/tags/v0.1.1
-[0.1.0]: https://fintokmak.com:8091/fintokmak/tokmak-timeline-system-release/-/tags/v0.1.0
+[Unreleased]: https://github.com/Fangjun-Zhou/TOKMAK-Timeline-System-Release
+[0.1.2]: https://github.com/Fangjun-Zhou/TOKMAK-Timeline-System-Release/releases/tag/v0.1.2
+[0.1.1]: https://github.com/Fangjun-Zhou/TOKMAK-Timeline-System-Release/releases/tag/v0.1.1
+[0.1.0]: https://github.com/Fangjun-Zhou/TOKMAK-Timeline-System-Release/releases/tag/v0.1.0
