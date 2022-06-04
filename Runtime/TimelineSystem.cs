@@ -243,6 +243,10 @@ namespace FinTOKMAK.TimelineSystem.Runtime
             
             // When finished, stop listening to the event hook.
             _eventSystemInvokeHook -= RemoveEventSet;
+            while (!_playingTimeline.ContainsKey(timeline))
+            {
+                yield return null;
+            }
             _playingTimeline.Remove(timeline);
         }
 
