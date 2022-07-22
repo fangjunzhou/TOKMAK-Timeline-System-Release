@@ -262,12 +262,12 @@ namespace FinTOKMAK.TimelineSystem.Runtime
             {
                 foreach (string eventName in checkEventNames)
                 {
-                    Debug.LogWarning($"Event {eventName} is not invoked!");
+                    Debug.LogError($"Event {eventName} is not invoked!");
                 }
 
                 foreach (string animName in checkAnimNames)
                 {
-                    Debug.LogWarning($"Animation {animName} is not invoked.");
+                    Debug.LogError($"Animation {animName} is not invoked.");
                 }
 
                 Debug.LogError("Required Event or Animation is not played.");
