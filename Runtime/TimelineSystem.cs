@@ -27,6 +27,11 @@ namespace FinTOKMAK.TimelineSystem.Runtime
         /// If current TimelineSystem use debug.
         /// </summary>
         public bool useDebug = false;
+        
+        /// <summary>
+        /// If initialize on awake.
+        /// </summary>
+        public bool initOnAwake = true;
 
         #endregion
 
@@ -64,6 +69,14 @@ namespace FinTOKMAK.TimelineSystem.Runtime
         {
             eventManager = gameObject.GetComponent<TimelineEventManager>();
             
+            if (initOnAwake)
+            {
+                Initialize();
+            }
+        }
+
+        public void Initialize()
+        {
             // Initialize the animEventTable
             foreach (string animatorDictKey in animatorDict.Keys)
             {
